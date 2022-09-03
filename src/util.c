@@ -362,12 +362,12 @@ U_LONG TestChars(const char *value, U_SHORT test, const char *cset)
 *** Returns:	pointer to property or NULL
 **************************************************************************/
 
-struct Property *FindProperty(struct Node *n, token id)
+struct Property *FindProperty(struct Node *n, token ident)
 {
 	struct Property *p;
 
 	for(p = n->prop; p; p=p->next)
-		if(p->id == id)
+		if(p->ident == ident)
 			break;
 
 	return p;
@@ -386,14 +386,14 @@ struct Property *FindProperty(struct Node *n, token id)
 ***				(exits on fatal error)
 **************************************************************************/
 
-struct Property *AddProperty(struct Node *n, token id, U_LONG row, U_LONG col, const char *id_str)
+struct Property *AddProperty(struct Node *n, token ident, U_LONG row, U_LONG col, const char *id_str)
 {
 	struct Property *newp = SaveMalloc(sizeof(struct Property), "property structure");
 	/* init property structure */
-	newp->id = id;
+	newp->ident = ident;
 	newp->idstr = SaveDupString(id_str, 0, "ID string");
-	newp->priority = sgf_token[id].priority;
-	newp->flags = sgf_token[id].flags;		/* local copy */
+	newp->priority = sgf_token[ident].priority;
+	newp->flags = sgf_token[ident].flags;		/* local copy */
 	newp->row = row;
 	newp->col = col;
 	newp->value = NULL;

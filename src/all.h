@@ -262,7 +262,7 @@ struct Property
 	struct Property *prev;
 	U_CHAR  priority;			/* for sorting properties within a node */
 
-	token id;
+	token ident;
 	char *idstr;				/* original ID string including lowercase (for TKN_UNKNOWN, error reporting, ...) */
 	U_SHORT flags;				/* copy of sgf_token[].flags (may get changed programmatically) */
 

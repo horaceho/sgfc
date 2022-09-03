@@ -117,7 +117,7 @@ bool Do_Move(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struct Bo
 	if(st->annotate & ST_MOVE)	/* there's a move already? */
 	{
 		PrintError(E_TWO_MOVES_IN_NODE, sgfc, p->row, p->col);
-		SplitNode(sgfc, n, 0, p->id, true);
+		SplitNode(sgfc, n, 0, p->ident, true);
 		return true;
 	}
 
@@ -128,7 +128,7 @@ bool Do_Move(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struct Bo
 
 	x = DecodePosChar(p->value->value[0]) - 1;
 	y = DecodePosChar(p->value->value[1]) - 1;
-	color = (unsigned char)sgf_token[p->id].data;
+	color = (unsigned char)sgf_token[p->ident].data;
 
 	if(st->board[MXY(x,y)])
 		PrintError(WS_ILLEGAL_MOVE, sgfc, p->row, p->col);
@@ -169,7 +169,7 @@ bool Do_AddStones(struct SGFInfo *sgfc, struct Node *n, struct Property *p, stru
 	if(sgfc->info->GM != 1)		/* game != Go? */
 		return true;
 
-	color = (unsigned char)sgf_token[p->id].data;
+	color = (unsigned char)sgf_token[p->ident].data;
 
 	v = p->value;
 	while(v)
@@ -312,7 +312,7 @@ bool Do_Markup(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struct 
 		return true;
 
 	v = p->value;
-	flag = sgf_token[p->id].data;
+	flag = sgf_token[p->ident].data;
 	empty = false;
 	not_empty = false;
 
@@ -380,13 +380,13 @@ bool Do_Annotate(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struc
 	struct Property *hlp;
 	U_SHORT flag;
 
-	flag = sgf_token[p->id].data;
+	flag = sgf_token[p->ident].data;
 
-	if((st->annotate & ST_ANN_BM) && p->id == TKN_TE) /* DO (doubtful) */
+	if((st->annotate & ST_ANN_BM) && p->ident == TKN_TE) /* DO (doubtful) */
 	{
 		PrintError(E4_BM_TE_IN_NODE, sgfc, p->row, p->col, "BM-TE", "DO");
 		hlp = FindProperty(n, TKN_BM);
-		hlp->id = TKN_DO;
+		hlp->ident = TKN_DO;
 		free(hlp->idstr);
 		hlp->idstr = SaveDupString(sgf_token[TKN_DO].id, 0, "DO id string");
 		hlp->value->value[0] = 0;
@@ -394,11 +394,11 @@ bool Do_Annotate(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struc
 		return false;
 	}
 
-	if(st->annotate & ST_ANN_TE && p->id == TKN_BM)	/* IT (interesting) */
+	if(st->annotate & ST_ANN_TE && p->ident == TKN_BM)	/* IT (interesting) */
 	{
 		PrintError(E4_BM_TE_IN_NODE, sgfc, p->row, p->col, "TE-BM", "IT");
 		hlp = FindProperty(n, TKN_TE);
-		hlp->id = TKN_IT;
+		hlp->ident = TKN_IT;
 		free(hlp->idstr);
 		hlp->idstr = SaveDupString(sgf_token[TKN_IT].id, 0, "DO id string");
 		hlp->value->value[0] = 0;
@@ -467,7 +467,7 @@ bool Do_GInfo(struct SGFInfo *sgfc, struct Node *n, struct Property *p, struct B
 	}
 
 	st->ginfo = n;
-	if(p->id != TKN_KI)
+	if(p->ident != TKN_KI)
 		return true;
 
 	if(FindProperty(n, TKN_KM))

@@ -99,7 +99,6 @@ bool Do_Root(struct SGFInfo *, struct Node *, struct Property *, struct BoardSta
 bool Do_GInfo(struct SGFInfo *, struct Node *, struct Property *, struct BoardStatus *);
 bool Do_View(struct SGFInfo *, struct Node *, struct Property *, struct BoardStatus *);
 
-
 /**** gameinfo.c ****/
 
 bool Check_GameInfo(struct SGFInfo *, struct Property *, struct PropValue *);

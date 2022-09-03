@@ -306,7 +306,7 @@ static int WriteProperty(struct SaveInfo *save, struct TreeInfo *info, struct Pr
 
 	do_tt = (info->GM == 1 && save->sgfc->options->pass_tt &&
 			(info->bwidth <= 19) && (info->bheight <= 19) &&
-			(prop->id == TKN_B || prop->id == TKN_W));
+			(prop->ident == TKN_B || prop->ident == TKN_W));
 
 	v = prop->value;			/* write property value(s) */
 
@@ -362,7 +362,7 @@ static int WriteNode(struct SaveInfo *save, struct TreeInfo *info, struct Node *
 	p = n->prop;
 	while(p)
 	{
-		if((sgf_token[p->id].flags & PVT_CPLIST) && !save->sgfc->options->expand_cpl &&
+		if((sgf_token[p->ident].flags & PVT_CPLIST) && !save->sgfc->options->expand_cpl &&
 		   (info->GM == 1))
 			CompressPointList(save->sgfc, p);
 

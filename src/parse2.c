@@ -221,9 +221,9 @@ static void CorrectVariation(struct SGFInfo *sgfc, struct Node *n)
 				if(b->value->next)		/* AB/AW has more than one value */
 					continue;
 
-				if(b->id == TKN_AW)		b->id = TKN_W;
-				else					b->id = TKN_B;
-				b->flags = sgf_token[b->id].flags;	/* update local copy */
+				if(b->ident == TKN_AW)		b->ident = TKN_W;
+				else					b->ident = TKN_B;
+				b->flags = sgf_token[b->ident].flags;	/* update local copy */
 
 				SplitNode(sgfc, j, TYPE_SETUP | TYPE_ROOT | TYPE_GINFO, TKN_N, false);
 			}
@@ -238,7 +238,7 @@ static void CorrectVariation(struct SGFInfo *sgfc, struct Node *n)
 					w = j->prop;		/* check for properties which occur */
 					while(w)			/* in node AND child */
 					{
-						if(FindProperty(j->child, w->id))
+						if(FindProperty(j->child, w->ident))
 							break;
 						w = w->next;
 					}
@@ -447,8 +447,8 @@ void SplitNode(struct SGFInfo *sgfc, struct Node *n, U_SHORT flags, token id, bo
 	while(p)
 	{
 		hlp = p->next;
-		if((move && ((p->flags & flags) || p->id == id)) ||
-		  (!move && (!(p->flags & flags) && p->id != id)))
+		if((move && ((p->flags & flags) || p->ident == id)) ||
+		  (!move && (!(p->flags & flags) && p->ident != id)))
 		{
 			Delete(&n->prop, p);
 			AddTail(&newnode->prop, p);
@@ -491,7 +491,7 @@ static int SplitMoveSetup(struct SGFInfo *sgfc, struct Node *n)
 
 	if((f & TYPE_SETUP) && (f & TYPE_MOVE))		/* mixed them? */
 	{
-		if(sc == 1 && s->id == TKN_PL)			/* single PL[]? */
+		if(sc == 1 && s->ident == TKN_PL)			/* single PL[]? */
 		{
 			PrintError(E4_MOVE_SETUP_MIXED, sgfc, s->row, s->col, "deleted PL property");
 			DelProperty(n, s);
@@ -529,7 +529,7 @@ static void CheckDoubleProp(struct SGFInfo *sgfc, struct Node *n)
 		while(q)
 		{
 			/* ID's identical? stridcmp() for TKN_UNKNOWN */
-			if(p->id == q->id && !stridcmp(p->idstr, q->idstr))
+			if(p->ident == q->ident && !stridcmp(p->idstr, q->idstr))
 			{
 				if(p->flags & DOUBLE_MERGE)
 				{
@@ -587,7 +587,7 @@ static void MergeDoubleText(struct SGFInfo *sgfc, struct Node *n)
 		while(q)
 		{
 			if(!(q->flags & PVT_TEXT) || !(q->flags & DOUBLE_MERGE) ||
-				!(p->id == q->id) || stridcmp(p->idstr, q->idstr))
+				!(p->ident == q->ident) || stridcmp(p->idstr, q->idstr))
 			{
 				q = q->next;
 				continue;

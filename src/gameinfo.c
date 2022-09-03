@@ -678,7 +678,7 @@ bool Check_GameInfo(struct SGFInfo *sgfc, struct Property *p, struct PropValue *
 	if(!Check_Text(sgfc, p, v))		/* parse text (converts spaces) */
 		return false;
 
-	switch(p->id)
+	switch(p->ident)
 	{
 		case TKN_RE:	parse = Parse_Result;		break;
 		case TKN_DT:	parse = Parse_Date;			break;

@@ -931,7 +931,7 @@ static void Check_PropValues(struct SGFInfo *sgfc, struct Property *p)
 	{
 		if(!v->value_len && !(p->flags & PVT_CHECK_EMPTY))
 		{
-			if(sgf_token[p->id].flags & PVT_DEL_EMPTY)
+			if(sgf_token[p->ident].flags & PVT_DEL_EMPTY)
 			{
 				PrintError(W_EMPTY_VALUE_DELETED, sgfc, v->row, v->col, p->idstr, "found");
 				v = DelPropValue(p, v);
@@ -945,9 +945,9 @@ static void Check_PropValues(struct SGFInfo *sgfc, struct Property *p)
 				v = v->next;
 		}
 		else
-			if(sgf_token[p->id].CheckValue)
+			if(sgf_token[p->ident].CheckValue)
 			{
-				if((*sgf_token[p->id].CheckValue)(sgfc, p, v))
+				if((*sgf_token[p->ident].CheckValue)(sgfc, p, v))
 					v = v->next;
 				else
 					v = DelPropValue(p, v);
@@ -1000,10 +1000,10 @@ void Check_Properties(struct SGFInfo *sgfc, struct Node *n, struct BoardStatus *
 	p = n->prop;
 	while(p)						/* property loop */
 	{
-		if((!(sgf_token[p->id].ff & (1 << (capped_ff - 1)))) &&
-			 (p->id != TKN_KI))
+		if((!(sgf_token[p->ident].ff & (1 << (capped_ff - 1)))) &&
+			 (p->ident != TKN_KI))
 		{
-			if(sgf_token[p->id].data & ST_OBSOLETE)
+			if(sgf_token[p->ident].data & ST_OBSOLETE)
 				PrintError(WS_PROPERTY_NOT_IN_FF, sgfc, p->row, p->col,
 			   			   p->idstr, sgfc->info->FF, "converted");
 			else
@@ -1011,8 +1011,8 @@ void Check_Properties(struct SGFInfo *sgfc, struct Node *n, struct BoardStatus *
 			   			   p->idstr, sgfc->info->FF, "parsing done anyway");
 		}
 
-		if(!sgfc->options->keep_obsolete_props && !(sgf_token[p->id].ff & FF4) &&
-		   !(sgf_token[p->id].data & ST_OBSOLETE))
+		if(!sgfc->options->keep_obsolete_props && !(sgf_token[p->ident].ff & FF4) &&
+		   !(sgf_token[p->ident].data & ST_OBSOLETE))
 		{
 			PrintError(W_PROPERTY_DELETED, sgfc, p->row, p->col, "obsolete ", p->idstr);
 			p = DelProperty(n, p);
@@ -1030,9 +1030,9 @@ void Check_Properties(struct SGFInfo *sgfc, struct Node *n, struct BoardStatus *
 		{
 			hlp = p->next;
 
-			if(sgf_token[p->id].Execute_Prop)
+			if(sgf_token[p->ident].Execute_Prop)
 			{
-				if(!(*sgf_token[p->id].Execute_Prop)(sgfc, n, p, st) || !p->value)
+				if(!(*sgf_token[p->ident].Execute_Prop)(sgfc, n, p, st) || !p->value)
 					DelProperty(n, p);
 			}
 
