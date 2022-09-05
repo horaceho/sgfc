@@ -286,6 +286,8 @@ struct Node
 	struct Property *prop;		/* prop list head */
 	struct Property *last;
 
+    struct BoardStatus *status; /* board status */
+
 	U_LONG row;
 	U_LONG col;
 };

@@ -981,6 +981,26 @@ static void CheckID_Lowercase(struct SGFInfo *sgfc, struct Property *p)
 	}
 }
 
+void StoreNodeStatus(struct Node *node, struct Property *property, struct BoardStatus *status)
+{
+    unsigned int area = (unsigned int)(status->bwidth * status->bheight);
+    if (node->status == NULL) {
+        node->status = SaveMalloc(sizeof(struct BoardStatus), "board status buffer");
+        memcpy(node->status, status, sizeof(struct BoardStatus));
+
+        node->status->board = SaveCalloc(area * sizeof(char), "goban buffer");
+        node->status->markup = SaveMalloc(area * sizeof(U_SHORT), "markup buffer");
+        memcpy(node->status->board, status->board, area * sizeof(char));
+        memcpy(node->status->markup, status->markup, area * sizeof(U_SHORT));
+    } else {
+        if ((property->flags & TYPE_MOVE) || (property->flags & TYPE_SETUP)) {
+            memcpy(node->status->board, status->board, area * sizeof(char));
+        }
+        if (status->markup_changed) {
+            memcpy(node->status->markup, status->markup, area * sizeof(U_SHORT));
+        }
+    }
+}
 
 /**************************************************************************
 *** Function:	Check_Properties
@@ -1032,9 +1052,12 @@ void Check_Properties(struct SGFInfo *sgfc, struct Node *n, struct BoardStatus *
 
 			if(sgf_token[p->ident].Execute_Prop)
 			{
-				if(!(*sgf_token[p->ident].Execute_Prop)(sgfc, n, p, st) || !p->value)
+                if(!(*sgf_token[p->ident].Execute_Prop)(sgfc, n, p, st) || !p->value) {
 					DelProperty(n, p);
-			}
+                } else {
+                    StoreNodeStatus(n, p, st);
+                }
+            }
 
 			p = hlp;
 		}

@@ -456,6 +456,7 @@ struct Node *NewNode(struct SGFInfo *sgfc, struct Node *parent, U_LONG row, U_LO
 	newn->sibling	= NULL;
 	newn->prop		= NULL;
 	newn->last		= NULL;
+    newn->status    = NULL;
 	newn->row		= row;
 	newn->col		= col;
 

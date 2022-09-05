@@ -449,8 +449,21 @@ void FreeSGFInfo(struct SGFInfo *sgfc)
 	{
 		m = n->next;
 		p = n->prop;
-		while(p)
+        while(p) {
 			p = DelProperty(n, p);		/* and properties */
+        }
+        if (n->status) {                /* and board status */
+            if(n->status->board) {
+                free(n->status->board);
+                n->status->board = NULL;
+            }
+            if(n->status->markup) {
+                free(n->status->markup);
+                n->status->markup = NULL;
+            }
+            free(n->status);
+            n->status = NULL;
+        }
 		free(n);
 		n = m;
 	}
